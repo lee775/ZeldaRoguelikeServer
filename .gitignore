@@ -10,3 +10,4 @@
 /Release/
 /Intermediate/
 /x64/
+*.idb
