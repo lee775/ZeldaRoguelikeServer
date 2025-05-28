@@ -7,7 +7,7 @@
         "Action": "Start"
       },
       {
-        "Path": "DummyClient\\DummyClient.vcxproj",
+        "Path": "GameCoding\\GameCoding\\GameCoding\\GameCoding.vcxproj",
         "Action": "Start"
       }
     ]
