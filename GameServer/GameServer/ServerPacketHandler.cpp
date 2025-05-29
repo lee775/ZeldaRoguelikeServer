@@ -3,7 +3,7 @@
 #include "BufferReader.h"
 #include "BufferWriter.h"
 
-void ServerPacketHandler::HandlePacket(BYTE* buffer, int32 len)
+void ServerPacketHandler::HandlePacket(GameSessionRef session, BYTE* buffer, int32 len)
 {
 	BufferReader br(buffer, len);
 
@@ -66,8 +66,18 @@ SendBufferRef ServerPacketHandler::Make_S_TEST(uint64 id, uint32 hp, uint16 atta
 			data->add_victims(20);
 		}
 	}
-	cout << "wawaww ID : " << pkt.id() << endl;
-	cout << "wawaww hp : " << pkt.hp() << endl;
-	cout << "wawaww att000 : " << pkt.attack() << endl;
+	//cout << "wawaww ID : " << pkt.id() << endl;
+	//cout << "wawaww hp : " << pkt.hp() << endl;
+	//cout << "wawaww att000 : " << pkt.attack() << endl;
 	return MakeSendBuffer(pkt, S_TEST);
+}
+
+SendBufferRef ServerPacketHandler::Make_S_EnterGame()
+{
+	Protocol::S_EnterGame pkt;
+
+	pkt.set_success(true);
+	pkt.set_accountid(0);
+
+	return MakeSendBuffer(pkt, S_EnterGame);
 }
