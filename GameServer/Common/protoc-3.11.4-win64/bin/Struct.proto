@@ -14,8 +14,8 @@ message ObjectInfo
 {
 	uint64 objectId = 1;
 	OBJECT_TYPE objectType = 2;
-	OBJECT_STATE_TYPE = 3;
-	DIR_TYPE = 4;
+	OBJECT_STATE_TYPE state = 3;
+	DIR_TYPE dir = 4;
 	string name = 5;
 	int32 hp = 6;
 	int32 maxHp = 7;
