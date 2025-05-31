@@ -4,9 +4,10 @@ enum
 {
 	S_TEST = 1,
 	S_EnterGame = 2,
-	S_MyPlayer = 3,
-	S_AddObject = 4,
-	S_RemoveObject = 5,
+
+	S_MyPlayer = 4,
+	S_AddObject = 5,
+	S_RemoveObject = 6,
 };
 
 struct BuffData

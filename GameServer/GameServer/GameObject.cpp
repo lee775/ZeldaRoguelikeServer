@@ -20,6 +20,10 @@ PlayerRef GameObject::CreatePlayer()
 	player->info.set_objectid(s_idGenerator++);
 	player->info.set_objecttype(Protocol::OBJECT_TYPE_PLAYER);
 
+	//TEMP
+	player->info.set_posx(5);
+	player->info.set_posy(5);
+
 	return player;
 }
 
