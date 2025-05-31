@@ -21,6 +21,15 @@
     <Filter Include="소스 파일\Protocol\Proto">
       <UniqueIdentifier>{17b28808-56d9-40e5-9db9-58ede49867b8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Game">
+      <UniqueIdentifier>{fcfc612c-2f14-4ab9-9ecc-750f55d55484}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Game\Object">
+      <UniqueIdentifier>{9e52849e-c739-4748-b264-d644dbbb8f8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Game\Room">
+      <UniqueIdentifier>{a17c3c14-ac8e-4676-a111-507dc6d0d519}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -50,6 +59,21 @@
     <ClCompile Include="Enum.pb.cc">
       <Filter>소스 파일\Protocol</Filter>
     </ClCompile>
+    <ClCompile Include="GameRoom.cpp">
+      <Filter>소스 파일\Game\Room</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>소스 파일\Game\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Creature.cpp">
+      <Filter>소스 파일\Game\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>소스 파일\Game\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>소스 파일\Game\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -75,6 +99,21 @@
     </ClInclude>
     <ClInclude Include="Enum.pb.h">
       <Filter>소스 파일\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="GameRoom.h">
+      <Filter>소스 파일\Game\Room</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>소스 파일\Game\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>소스 파일\Game\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>소스 파일\Game\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Creature.h">
+      <Filter>소스 파일\Game\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
