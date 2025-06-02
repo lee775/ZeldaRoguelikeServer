@@ -153,6 +153,16 @@ void GameRoom::RemoveObject(uint64 id)
 	if (gameObject == nullptr)
 		return;
 
+	{
+		Protocol::S_RemoveObject pkt;
+
+		pkt.add_id(id);
+
+		SendBufferRef sendBuf = ServerPacketHandler::Make_S_RemoveObject(pkt);
+		Broadcast(sendBuf);
+
+	}
+
 	switch (gameObject->info.objecttype())
 	{
 	case Protocol::OBJECT_TYPE_PLAYER:
@@ -166,17 +176,6 @@ void GameRoom::RemoveObject(uint64 id)
 	}
 
 	gameObject->room = nullptr;
-
-	// TODO 신규 오브젝트 삭제 전송
-	{
-		Protocol::S_RemoveObject pkt;
-
-		pkt.add_id(id);
-
-		SendBufferRef sendBuf = ServerPacketHandler::Make_S_RemoveObject(pkt);
-		Broadcast(sendBuf);
-
-	}
 }
 
 void GameRoom::Broadcast(SendBufferRef& sendBuffer)

@@ -105,5 +105,11 @@ void Monster::UpdateSkill()
 	target->info.set_hp(target->info.hp() - info.attack());
 	BroadcastAttack(target->info, info);
 
+	if (target->info.hp() <= 0)
+	{
+		_target.reset();
+		room->RemoveObject(target->info.objectid());
+	}
+
 	SetState(IDLE);
 }
