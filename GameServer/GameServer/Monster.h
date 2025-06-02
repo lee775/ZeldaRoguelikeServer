@@ -6,10 +6,16 @@ class Monster : public Creature
 	using Super = Creature;
 public:
 	Monster();
-	virtual ~Monster();
+	virtual ~Monster() override;
 
 	virtual void Update();
-
 private:
+	virtual void UpdateIdle();
+	virtual void UpdateMove();
+	virtual void UpdateSkill();
+
+protected:
+	uint64 _waitUntil = 0;
+	weak_ptr<Player> _target;
 };
 

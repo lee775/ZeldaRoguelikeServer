@@ -27,11 +27,21 @@ message S_MyPlayer
 message S_AddObject
 {
 	// repeated = list
-	repeated ObjectInfo object = 1;
+	repeated ObjectInfo objects = 1;
 }
 
 message S_RemoveObject
 {
 	// repeated = list
 	repeated uint64 id = 1;
+}
+
+message C_Move
+{
+	ObjectInfo info = 1;
+}
+
+message S_Move
+{
+	ObjectInfo info = 1;
 }
