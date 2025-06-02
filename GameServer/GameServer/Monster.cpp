@@ -43,6 +43,7 @@ void Monster::UpdateIdle()
 	PlayerRef target = _target.lock();
 
 	//if (target == nullptr)
+	// 지속적으로 가장 가까운 적을 향해 이동
 	_target = room->FindClosestPlayer(GetCellPos());
 
 	if (target)
@@ -51,10 +52,15 @@ void Monster::UpdateIdle()
 		int32 dist = abs(dir.x) + abs(dir.y);
 		if (dist == 1)
 		{
+			// 다음 공격까지의 딜레이 (1s)
+			uint64 now = GetTickCount64();
+			if (_waitAttackUntil > now)
+				return;
+
 			// 공격
 			SetDir(GetLookAtDir(target->GetCellPos()));
 			SetState(SKILL, true);
-			_waitUntil = GetTickCount64() + 1000; // 공격 종료 시간
+			_waitAttackUntil = GetTickCount64() + 1000; // 공격 종료 시간
 		}
 		else
 		{
@@ -68,7 +74,7 @@ void Monster::UpdateIdle()
 					{
 						SetDir(GetLookAtDir(nextPos));
 						SetCellPos(nextPos);
-						_waitUntil = GetTickCount64() + 1000;
+						_waitMoveUntil = GetTickCount64() + 1000;
 						SetState(MOVE, true);
 					}
 				}
@@ -83,7 +89,7 @@ void Monster::UpdateMove()
 {
 	uint64 now = GetTickCount64();
 
-	if (_waitUntil > now)
+	if (_waitMoveUntil > now)
 		return;
 
 	SetState(IDLE);
@@ -91,10 +97,13 @@ void Monster::UpdateMove()
 
 void Monster::UpdateSkill()
 {
-	uint64 now = GetTickCount64();
+	PlayerRef target = _target.lock();
 
-	if (_waitUntil > now)
+	if (target == nullptr)
 		return;
+
+	target->info.set_hp(target->info.hp() - info.attack());
+	BroadcastAttack(target->info, info);
 
 	SetState(IDLE);
 }

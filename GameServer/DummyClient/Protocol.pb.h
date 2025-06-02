@@ -49,7 +49,7 @@ struct TableStruct_Protocol_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxillaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[7]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[8]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -63,6 +63,9 @@ extern C_MoveDefaultTypeInternal _C_Move_default_instance_;
 class S_AddObject;
 class S_AddObjectDefaultTypeInternal;
 extern S_AddObjectDefaultTypeInternal _S_AddObject_default_instance_;
+class S_Attack;
+class S_AttackDefaultTypeInternal;
+extern S_AttackDefaultTypeInternal _S_Attack_default_instance_;
 class S_EnterGame;
 class S_EnterGameDefaultTypeInternal;
 extern S_EnterGameDefaultTypeInternal _S_EnterGame_default_instance_;
@@ -82,6 +85,7 @@ extern S_TESTDefaultTypeInternal _S_TEST_default_instance_;
 PROTOBUF_NAMESPACE_OPEN
 template<> ::Protocol::C_Move* Arena::CreateMaybeMessage<::Protocol::C_Move>(Arena*);
 template<> ::Protocol::S_AddObject* Arena::CreateMaybeMessage<::Protocol::S_AddObject>(Arena*);
+template<> ::Protocol::S_Attack* Arena::CreateMaybeMessage<::Protocol::S_Attack>(Arena*);
 template<> ::Protocol::S_EnterGame* Arena::CreateMaybeMessage<::Protocol::S_EnterGame>(Arena*);
 template<> ::Protocol::S_Move* Arena::CreateMaybeMessage<::Protocol::S_Move>(Arena*);
 template<> ::Protocol::S_MyPlayer* Arena::CreateMaybeMessage<::Protocol::S_MyPlayer>(Arena*);
@@ -1080,6 +1084,157 @@ class S_Move :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Protocol_2eproto;
 };
+// -------------------------------------------------------------------
+
+class S_Attack :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.S_Attack) */ {
+ public:
+  S_Attack();
+  virtual ~S_Attack();
+
+  S_Attack(const S_Attack& from);
+  S_Attack(S_Attack&& from) noexcept
+    : S_Attack() {
+    *this = ::std::move(from);
+  }
+
+  inline S_Attack& operator=(const S_Attack& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline S_Attack& operator=(S_Attack&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const S_Attack& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const S_Attack* internal_default_instance() {
+    return reinterpret_cast<const S_Attack*>(
+               &_S_Attack_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    7;
+
+  friend void swap(S_Attack& a, S_Attack& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(S_Attack* other) {
+    if (other == this) return;
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline S_Attack* New() const final {
+    return CreateMaybeMessage<S_Attack>(nullptr);
+  }
+
+  S_Attack* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<S_Attack>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const S_Attack& from);
+  void MergeFrom(const S_Attack& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(S_Attack* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.S_Attack";
+  }
+  private:
+  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_Protocol_2eproto);
+    return ::descriptor_table_Protocol_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kTargetInfoFieldNumber = 1,
+    kAttackerInfoFieldNumber = 2,
+  };
+  // .Protocol.ObjectInfo targetInfo = 1;
+  bool has_targetinfo() const;
+  private:
+  bool _internal_has_targetinfo() const;
+  public:
+  void clear_targetinfo();
+  const ::Protocol::ObjectInfo& targetinfo() const;
+  ::Protocol::ObjectInfo* release_targetinfo();
+  ::Protocol::ObjectInfo* mutable_targetinfo();
+  void set_allocated_targetinfo(::Protocol::ObjectInfo* targetinfo);
+  private:
+  const ::Protocol::ObjectInfo& _internal_targetinfo() const;
+  ::Protocol::ObjectInfo* _internal_mutable_targetinfo();
+  public:
+
+  // .Protocol.ObjectInfo attackerInfo = 2;
+  bool has_attackerinfo() const;
+  private:
+  bool _internal_has_attackerinfo() const;
+  public:
+  void clear_attackerinfo();
+  const ::Protocol::ObjectInfo& attackerinfo() const;
+  ::Protocol::ObjectInfo* release_attackerinfo();
+  ::Protocol::ObjectInfo* mutable_attackerinfo();
+  void set_allocated_attackerinfo(::Protocol::ObjectInfo* attackerinfo);
+  private:
+  const ::Protocol::ObjectInfo& _internal_attackerinfo() const;
+  ::Protocol::ObjectInfo* _internal_mutable_attackerinfo();
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.S_Attack)
+ private:
+  class _Internal;
+
+  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
+  ::Protocol::ObjectInfo* targetinfo_;
+  ::Protocol::ObjectInfo* attackerinfo_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Protocol_2eproto;
+};
 // ===================================================================
 
 
@@ -1496,9 +1651,123 @@ inline void S_Move::set_allocated_info(::Protocol::ObjectInfo* info) {
   // @@protoc_insertion_point(field_set_allocated:Protocol.S_Move.info)
 }
 
+// -------------------------------------------------------------------
+
+// S_Attack
+
+// .Protocol.ObjectInfo targetInfo = 1;
+inline bool S_Attack::_internal_has_targetinfo() const {
+  return this != internal_default_instance() && targetinfo_ != nullptr;
+}
+inline bool S_Attack::has_targetinfo() const {
+  return _internal_has_targetinfo();
+}
+inline const ::Protocol::ObjectInfo& S_Attack::_internal_targetinfo() const {
+  const ::Protocol::ObjectInfo* p = targetinfo_;
+  return p != nullptr ? *p : *reinterpret_cast<const ::Protocol::ObjectInfo*>(
+      &::Protocol::_ObjectInfo_default_instance_);
+}
+inline const ::Protocol::ObjectInfo& S_Attack::targetinfo() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_Attack.targetInfo)
+  return _internal_targetinfo();
+}
+inline ::Protocol::ObjectInfo* S_Attack::release_targetinfo() {
+  // @@protoc_insertion_point(field_release:Protocol.S_Attack.targetInfo)
+  
+  ::Protocol::ObjectInfo* temp = targetinfo_;
+  targetinfo_ = nullptr;
+  return temp;
+}
+inline ::Protocol::ObjectInfo* S_Attack::_internal_mutable_targetinfo() {
+  
+  if (targetinfo_ == nullptr) {
+    auto* p = CreateMaybeMessage<::Protocol::ObjectInfo>(GetArenaNoVirtual());
+    targetinfo_ = p;
+  }
+  return targetinfo_;
+}
+inline ::Protocol::ObjectInfo* S_Attack::mutable_targetinfo() {
+  // @@protoc_insertion_point(field_mutable:Protocol.S_Attack.targetInfo)
+  return _internal_mutable_targetinfo();
+}
+inline void S_Attack::set_allocated_targetinfo(::Protocol::ObjectInfo* targetinfo) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(targetinfo_);
+  }
+  if (targetinfo) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena = nullptr;
+    if (message_arena != submessage_arena) {
+      targetinfo = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, targetinfo, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  targetinfo_ = targetinfo;
+  // @@protoc_insertion_point(field_set_allocated:Protocol.S_Attack.targetInfo)
+}
+
+// .Protocol.ObjectInfo attackerInfo = 2;
+inline bool S_Attack::_internal_has_attackerinfo() const {
+  return this != internal_default_instance() && attackerinfo_ != nullptr;
+}
+inline bool S_Attack::has_attackerinfo() const {
+  return _internal_has_attackerinfo();
+}
+inline const ::Protocol::ObjectInfo& S_Attack::_internal_attackerinfo() const {
+  const ::Protocol::ObjectInfo* p = attackerinfo_;
+  return p != nullptr ? *p : *reinterpret_cast<const ::Protocol::ObjectInfo*>(
+      &::Protocol::_ObjectInfo_default_instance_);
+}
+inline const ::Protocol::ObjectInfo& S_Attack::attackerinfo() const {
+  // @@protoc_insertion_point(field_get:Protocol.S_Attack.attackerInfo)
+  return _internal_attackerinfo();
+}
+inline ::Protocol::ObjectInfo* S_Attack::release_attackerinfo() {
+  // @@protoc_insertion_point(field_release:Protocol.S_Attack.attackerInfo)
+  
+  ::Protocol::ObjectInfo* temp = attackerinfo_;
+  attackerinfo_ = nullptr;
+  return temp;
+}
+inline ::Protocol::ObjectInfo* S_Attack::_internal_mutable_attackerinfo() {
+  
+  if (attackerinfo_ == nullptr) {
+    auto* p = CreateMaybeMessage<::Protocol::ObjectInfo>(GetArenaNoVirtual());
+    attackerinfo_ = p;
+  }
+  return attackerinfo_;
+}
+inline ::Protocol::ObjectInfo* S_Attack::mutable_attackerinfo() {
+  // @@protoc_insertion_point(field_mutable:Protocol.S_Attack.attackerInfo)
+  return _internal_mutable_attackerinfo();
+}
+inline void S_Attack::set_allocated_attackerinfo(::Protocol::ObjectInfo* attackerinfo) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(attackerinfo_);
+  }
+  if (attackerinfo) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena = nullptr;
+    if (message_arena != submessage_arena) {
+      attackerinfo = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, attackerinfo, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  attackerinfo_ = attackerinfo;
+  // @@protoc_insertion_point(field_set_allocated:Protocol.S_Attack.attackerInfo)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

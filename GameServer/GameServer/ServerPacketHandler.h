@@ -11,6 +11,8 @@ enum
 
 	C_Move = 10,
 	S_Move = 11,
+
+	S_Attack = 20,
 };
 
 struct BuffData
@@ -34,6 +36,7 @@ public:
 	static SendBufferRef Make_S_AddObject(const Protocol::S_AddObject& pkt);
 	static SendBufferRef Make_S_RemoveObject(const Protocol::S_RemoveObject& pkt);
 	static SendBufferRef Make_S_Move(const Protocol::ObjectInfo& info);
+	static SendBufferRef Make_S_Attack(const Protocol::ObjectInfo& targetInfo, const Protocol::ObjectInfo& attackerInfo);
 
 	template<typename T>
 	static SendBufferRef MakeSendBuffer(T& pkt, uint16 pktId)

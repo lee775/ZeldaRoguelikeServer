@@ -45,3 +45,9 @@ message S_Move
 {
 	ObjectInfo info = 1;
 }
+
+message S_Attack
+{
+	ObjectInfo targetInfo = 1;
+	ObjectInfo attackerInfo = 2;
+}

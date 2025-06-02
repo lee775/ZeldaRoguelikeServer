@@ -15,7 +15,8 @@ private:
 	virtual void UpdateSkill();
 
 protected:
-	uint64 _waitUntil = 0;
+	uint64 _waitMoveUntil = 0;
+	uint64 _waitAttackUntil = 0;
 	weak_ptr<Player> _target;
 };
 
