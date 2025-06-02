@@ -42,8 +42,8 @@ void Monster::UpdateIdle()
 	// Find Player
 	PlayerRef target = _target.lock();
 
-	if (target == nullptr)
-		_target = room->FindClosestPlayer(GetCellPos());
+	//if (target == nullptr)
+	_target = room->FindClosestPlayer(GetCellPos());
 
 	if (target)
 	{
