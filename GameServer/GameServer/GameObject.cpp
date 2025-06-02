@@ -28,6 +28,10 @@ PlayerRef GameObject::CreatePlayer()
 	//TEMP
 	player->info.set_posx(5);
 	player->info.set_posy(5);
+	player->info.set_maxhp(100);
+	player->info.set_hp(100);
+	player->info.set_attack(5);
+	player->info.set_defence(0);
 
 	return player;
 }
