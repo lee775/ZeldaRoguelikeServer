@@ -113,6 +113,12 @@ void GameRoom::Handle_C_Move(Protocol::C_Move& pkt)
 		SendBufferRef sendBuffer = ServerPacketHandler::Make_S_Move(pkt.info());
 		Broadcast(sendBuffer);
 	}
+	if (gameObject->info.state() == SKILL)
+	{
+		PlayerRef player = dynamic_pointer_cast<Player>(gameObject);
+		if (player)
+			player->Attack();
+	}
 }
 
 void GameRoom::AddObject(GameObjectRef gameObject)

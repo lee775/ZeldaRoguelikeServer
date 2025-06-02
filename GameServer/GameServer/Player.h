@@ -8,6 +8,8 @@ public:
 	Player();
 	virtual ~Player();
 
+	void Attack();
+
 public:
 	GameSessionRef session;
 };
