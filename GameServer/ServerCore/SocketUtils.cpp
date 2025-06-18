@@ -36,11 +36,13 @@ bool SocketUtils::BindWindowsFunction(SOCKET socket, GUID guid, LPVOID* fn)
 
 SOCKET SocketUtils::CreateSocket()
 {
+	// 그냥 socket은 iocp 사용불가
 	return ::WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, WSA_FLAG_OVERLAPPED);
 }
 
 bool SocketUtils::SetLinger(SOCKET socket, uint16 onoff, uint16 linger)
 {
+	// 소켓연결 해제시 마무리 처리 어떻게 할지 설정 하는 옵션
 	LINGER option;
 	option.l_onoff = onoff;
 	option.l_linger = linger;
@@ -49,27 +51,34 @@ bool SocketUtils::SetLinger(SOCKET socket, uint16 onoff, uint16 linger)
 
 bool SocketUtils::SetReuseAddress(SOCKET socket, bool flag)
 {
+	// 주소, 포트 재사용 설정을 하기위한 옵션
 	return SetSockOpt(socket, SOL_SOCKET, SO_REUSEADDR, flag);
 }
 
 bool SocketUtils::SetRecvBufferSize(SOCKET socket, int32 size)
 {
+	// 수신버퍼 크기 조정
 	return SetSockOpt(socket, SOL_SOCKET, SO_RCVBUF, size);
 }
 
 bool SocketUtils::SetSendBufferSize(SOCKET socket, int32 size)
 {
+	// 송신버퍼 크기 조정
 	return SetSockOpt(socket, SOL_SOCKET, SO_SNDBUF, size);
 }
 
 bool SocketUtils::SetTcpNoDelay(SOCKET socket, bool flag)
 {
+	// 네이글 알고리즘 사용 옵션
 	return SetSockOpt(socket, SOL_SOCKET, TCP_NODELAY, flag);
 }
 
 // ListenSocket의 특성을 ClientSocket에 그대로 적용
 bool SocketUtils::SetUpdateAcceptSocket(SOCKET socket, SOCKET listenSocket)
 {
+	// AcceptEx는 클라이언트 소켓을 미리 만들어야 하며,
+	// SO_UPDATE_ACCEPT_CONTEXT를 통해 해당 소켓이 listenSocket에서 accept된 것임을 커널에 알려줘야 함.
+	// 이를 설정하지 않으면 getpeername 등에서 오류가 발생할 수 있음
 	return SetSockOpt(socket, SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, listenSocket);
 }
 

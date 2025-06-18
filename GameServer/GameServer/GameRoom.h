@@ -15,6 +15,7 @@ struct PQNode
 class GameRoom : public enable_shared_from_this<GameRoom>
 {
 public:
+	USE_LOCK
 	GameRoom();
 
 	void Init();

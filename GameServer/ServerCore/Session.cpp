@@ -50,8 +50,8 @@ void Session::Disconnect(const WCHAR* cause)
 		return;
 
 	// TEMP
-	wcout << "Disconnect : " << cause << endl;
-
+	wcout << "¤·¤·¤·Disconnect : " << cause << endl;
+	 
 	OnDisconnected(); // ÄÁÅÙÃ÷ ÄÚµå¿¡¼­ ÀçÁ¤ÀÇ
 	GetService()->ReleaseSession(GetSessionRef());
 
