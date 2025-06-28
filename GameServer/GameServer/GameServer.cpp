@@ -20,7 +20,7 @@ int main()
 	GRoom->Init();
 
 	ServerServiceRef service = make_shared<ServerService>(
-	NetAddress(L"127.0.0.1", 7777),
+		NetAddress(L"127.0.0.1", 7777),
 		make_shared<IocpCore>(),
 		[]() { return make_shared<GameSession>(); },
 		100
@@ -28,20 +28,26 @@ int main()
 
 	assert(service->Start());
 
-	for (int32 i = 0; i < 1; i++)
+	for (int32 i = 0; i < 5; i++)
 	{
 		GThreadManager->Launch([=]()
 			{
 				while (true)
 				{
 					service->GetIocpCore()->Dispatch(0);
-					GRoom->Update();
 				}
 			});
 	}
+	GThreadManager->Launch([=]()
+		{
+			while (true)
+			{
+				GRoom->Update();
+			}
+		});
 
 	// Contents
-	char sendData[1000] = "Hello World";
+	//char sendData[1000] = "Hello World";
 
 	//while (true)
 	//{

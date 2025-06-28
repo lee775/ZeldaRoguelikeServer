@@ -6,6 +6,7 @@
 
 void GameSession::OnConnected()
 {
+	WRITE_LOCK
 	GSessionManager.Add(static_pointer_cast<GameSession>(shared_from_this()));
 
 	Send(ServerPacketHandler::Make_S_EnterGame());
@@ -16,6 +17,7 @@ void GameSession::OnConnected()
 
 void GameSession::OnDisconnected()
 {
+	WRITE_LOCK
 	GSessionManager.Remove(static_pointer_cast<GameSession>(shared_from_this()));
 
 	// 게임 나가기

@@ -23,12 +23,14 @@ void GameRoom::Init()
 
 void GameRoom::Update()
 {
-	for (auto& item : _players)
+	// 참조가 아닌 복사방식으로 해서 업데이트 된 부분은 다음 반복때 적용되도록 설정
+	// 이부분 간혹 삭제되는  순간에 오류 날때 있음
+	for (auto item : _players)
 	{
 		item.second->Update();
 	}
 
-	for (auto& item : _monsters)
+	for (auto item : _monsters)
 	{
 		item.second->Update();
 	}
@@ -52,12 +54,12 @@ void GameRoom::EnterRoom(GameSessionRef session)
 	{
 		Protocol::S_AddObject pkt;
 
-		for (auto& item : _players)
+		for (auto item : _players)
 		{
 			Protocol::ObjectInfo* info = pkt.add_objects();
 			*info = item.second->info;
 		}
-		for (auto& item : _monsters)
+		for (auto item : _monsters)
 		{
 			Protocol::ObjectInfo* info = pkt.add_objects();
 			*info = item.second->info;
@@ -126,16 +128,19 @@ void GameRoom::AddObject(GameObjectRef gameObject)
 	uint64 id = gameObject->info.objectid();
 	auto objectType = gameObject->info.objecttype();
 
-	switch (objectType)
 	{
-	case Protocol::OBJECT_TYPE_PLAYER:
-		_players[id] = static_pointer_cast<Player>(gameObject);
-		break;
-	case Protocol::OBJECT_TYPE_MONSTER:
-		_monsters[id] = static_pointer_cast<Monster>(gameObject);
-		break;
-	default:
-		return;
+		WRITE_LOCK
+		switch (objectType)
+		{
+		case Protocol::OBJECT_TYPE_PLAYER:
+			_players[id] = static_pointer_cast<Player>(gameObject);
+			break;
+		case Protocol::OBJECT_TYPE_MONSTER:
+			_monsters[id] = static_pointer_cast<Monster>(gameObject);
+			break;
+		default:
+			return;
+		}
 	}
 
 	gameObject->room = GetRoomRef();
@@ -168,25 +173,26 @@ void GameRoom::RemoveObject(uint64 id)
 		Broadcast(sendBuf);
 
 	}
-
-	switch (gameObject->info.objecttype())
 	{
-	case Protocol::OBJECT_TYPE_PLAYER:
-		_players.erase(id);
-		break;
-	case Protocol::OBJECT_TYPE_MONSTER:
-		_monsters.erase(id);
-		break;
-	default:
-		return;
+		WRITE_LOCK
+		switch (gameObject->info.objecttype())
+		{
+		case Protocol::OBJECT_TYPE_PLAYER:
+			_players.erase(id);
+			break;
+		case Protocol::OBJECT_TYPE_MONSTER:
+			_monsters.erase(id);
+			break;
+		default:
+			return;
+		}
 	}
-
 	gameObject->room = nullptr;
 }
 
 void GameRoom::Broadcast(SendBufferRef& sendBuffer)
 {
-	for (auto& item : _players)
+	for (auto item : _players)
 	{
 		item.second->session->Send(sendBuffer);
 	}

@@ -8,7 +8,7 @@ public:
 	{
 		cout << "~GameSession" << endl;
 	}
-
+	USE_LOCK
 	virtual void OnConnected() override;
 	virtual void OnDisconnected() override;
 	virtual void OnRecvPacket(BYTE* buffer, int32 len) override;
