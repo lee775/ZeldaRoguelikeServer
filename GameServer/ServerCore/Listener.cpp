@@ -117,3 +117,77 @@ void Listener::ProcessAccept(IocpEvent* acceptEvent)
 
 	RegisterAccept(acceptEvent);
 }
+
+BoostListener::~BoostListener()
+{
+}
+
+bool BoostListener::StartAccept(BoostServiceRef service)
+{
+	_service = service;
+	if (_service == nullptr)
+		return false;
+
+	AcceptorInit();
+
+	const int32 acceptCount = _service->GetMaxSessionCount();
+	for (int32 i = 0; i < acceptCount; i++)
+		RegisterAccept();
+
+	return true;
+}
+
+void BoostListener::CloseSocket()
+{
+}
+
+boost::asio::ip::tcp::acceptor& BoostListener::GetBoostHandle()
+{
+	return _acceptor.value();
+}
+
+void BoostListener::Dispatch(IocpEvent* iocpEvent, int32 numOfBytes)
+{
+}
+
+void BoostListener::RegisterAccept()
+{
+	SessionRef session = _service->CreateSession(); // Register IOCP
+
+	_acceptor->async_accept(session->GetBoostSocket(), [this, session](boost::system::error_code ec)
+		{
+			auto self = shared_from_this();
+
+			if (!ec)
+			{
+				std::cout << "[서버] 클라이언트 연결됨\n";
+
+				boost::asio::ip::tcp::endpoint remoteEndpoint = session->GetBoostSocket().remote_endpoint();
+				string ip = remoteEndpoint.address().to_string();
+				wstring ipWStr(ip.begin(), ip.end());
+				unsigned short port = remoteEndpoint.port();
+
+				session->SetNetAddress(NetAddress(ipWStr, port));
+
+				session->BoostProcessConnect();
+			}
+			else
+			{
+				std::cerr << "[서버] 연결 실패: " << ec.message() << "\n";
+			}
+
+			this->RegisterAccept(); // 다음 클라이언트 수락
+		});
+}
+
+void BoostListener::AcceptorInit()
+{
+	boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::tcp::v4(), _service->GetNetAddress().GetPort());
+
+	_acceptor.emplace(_service->GetIoContext());
+	_acceptor->open(endpoint.protocol());
+	_acceptor->set_option(boost::asio::socket_base::reuse_address(true));
+	_acceptor->set_option(boost::asio::socket_base::linger(true, 0));
+	_acceptor->bind(endpoint);
+	_acceptor->listen();
+}

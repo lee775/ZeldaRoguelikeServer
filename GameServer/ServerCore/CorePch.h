@@ -1,9 +1,12 @@
 #pragma once
 
+
 #include "Types.h"
 #include "CoreMacro.h"
 #include "CoreTLS.h"
 #include "CoreGlobal.h"
+
+#include <boost/asio.hpp>
 
 #include <vector>
 #include <list>
@@ -19,6 +22,8 @@
 #include <WS2tcpip.h>
 #include <windows.h>
 #include <iostream>
+
+#include <optional>
 using namespace std;
 
 #include <assert.h>

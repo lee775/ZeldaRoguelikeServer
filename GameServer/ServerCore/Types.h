@@ -25,6 +25,8 @@ using SessionRef = std::shared_ptr<class Session>;
 using PacketSessionRef = std::shared_ptr<class PacketSession>;
 using ListenerRef = std::shared_ptr<class Listener>;
 using ServerServiceRef = std::shared_ptr<class ServerService>;
+using BoostListenerRef = std::shared_ptr<class BoostListener>;
+using BoostServiceRef = std::shared_ptr<class BoostService>;
 using ClientServiceRef = std::shared_ptr<class ClientService>;
 using SendBufferRef = std::shared_ptr<class SendBuffer>;
 
@@ -32,3 +34,9 @@ using SendBufferRef = std::shared_ptr<class SendBuffer>;
 #define size32(val)		static_cast<int32>(sizeof(val))
 #define len16(arr)		static_cast<int16>(sizeof(arr)/sizeof(arr[0]))
 #define len32(arr)		static_cast<int32>(sizeof(arr)/sizeof(arr[0]))
+
+enum class ServerLibMode
+{
+	iocp = 1,
+	boost = 2
+};

@@ -22,7 +22,10 @@ int main()
 	ServerServiceRef service = make_shared<ServerService>(
 		NetAddress(L"127.0.0.1", 7777),
 		make_shared<IocpCore>(),
-		[]() { return make_shared<GameSession>(); },
+		[]() {
+			ServerLibMode mode = ServerLibMode::iocp;
+			return make_shared<GameSession>(mode);
+		},
 		100
 	);
 

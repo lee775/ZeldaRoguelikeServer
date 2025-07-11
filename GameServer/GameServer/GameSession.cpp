@@ -4,6 +4,10 @@
 #include "ServerPacketHandler.h"
 #include "GameRoom.h"
 
+GameSession::GameSession(ServerLibMode mode) : PacketSession(mode)
+{
+}
+
 void GameSession::OnConnected()
 {
 	WRITE_LOCK

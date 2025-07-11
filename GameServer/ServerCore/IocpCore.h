@@ -30,3 +30,14 @@ public:
 private:
 	HANDLE		_iocpHandle;
 };
+
+class BoostCore
+{
+public:
+	BoostCore();
+	~BoostCore();
+
+	bool		Dispatch();
+
+private:
+};

@@ -4,6 +4,7 @@
 class GameSession : public PacketSession
 {
 public:
+	GameSession(ServerLibMode mode);
 	~GameSession()
 	{
 		cout << "~GameSession" << endl;

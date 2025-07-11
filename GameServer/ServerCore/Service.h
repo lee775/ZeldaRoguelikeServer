@@ -81,3 +81,20 @@ public:
 private:
 	ListenerRef		_listener = nullptr;
 };
+
+class BoostService : public Service
+{
+public:
+	BoostService(NetAddress targetAddress, IocpCoreRef core, SessionFactory factory, int32 maxSessionCount = 1);
+	virtual ~BoostService() {}
+
+	virtual bool	Start() override;
+	virtual void	CloseService() override;
+	SessionRef		CreateSession();
+
+	boost::asio::io_context& GetIoContext() { return io; }
+
+private:
+	BoostListenerRef	_listener = nullptr;
+	boost::asio::io_context		io;
+};

@@ -7,9 +7,10 @@
 	Session
 ---------------*/
 
-Session::Session() : _connectEvent(EventType::Connect), _disconnectEvent(EventType::Disconnect), _recvEvent(EventType::Recv), _recvBuffer(BUFFER_SIZE), _sendEvent(EventType::Send)
+Session::Session(ServerLibMode mode) : _connectEvent(EventType::Connect), _disconnectEvent(EventType::Disconnect), _recvEvent(EventType::Recv), _recvBuffer(BUFFER_SIZE), _sendEvent(EventType::Send), _serverMode(mode)
 {
-	_socket = SocketUtils::CreateSocket();
+	if (_serverMode == ServerLibMode::iocp)
+		_socket = SocketUtils::CreateSocket();
 }
 
 Session::~Session()
@@ -36,7 +37,13 @@ void Session::Send(SendBufferRef sendBuffer)
 	}
 
 	if (registerSend)
-		RegisterSend();
+	{
+		if (_serverMode == ServerLibMode::iocp)
+			RegisterSend();
+		else if (_serverMode == ServerLibMode::boost)
+			BoostRegisterSend();
+
+	}
 }
 
 bool Session::Connect()
@@ -51,11 +58,14 @@ void Session::Disconnect(const WCHAR* cause)
 
 	// TEMP
 	wcout << "Disconnect : " << cause << endl;
-	 
+
 	OnDisconnected(); // 컨텐츠 코드에서 재정의
 	GetService()->ReleaseSession(GetSessionRef());
 
-	RegisterDisconnect();
+	if (_serverMode == ServerLibMode::iocp)
+		RegisterDisconnect();
+	else if (_serverMode == ServerLibMode::boost)
+		BoostRegisterDisconnect();
 }
 
 HANDLE Session::GetHandle()
@@ -295,6 +305,123 @@ void Session::ProcessSend(int32 numOfBytes)
 		RegisterSend();
 }
 
+void Session::BoostProcessConnect()
+{
+	_connected.store(true);
+
+	// 세션 등록
+	GetService()->AddSession(GetSessionRef());
+
+	// 컨텐츠 코드에서 재정의
+	OnConnected();
+
+	// 수신 등록
+	BoostRegisterRecv();
+}
+
+void Session::BoostRegisterRecv()
+{
+	if (IsConnected() == false)
+		return;
+
+
+	_boostSocket.value().async_read_some(boost::asio::buffer(_recvBuffer.WritePos(), _recvBuffer.FreeSize()), [this](boost::system::error_code ec, std::size_t len) {
+		if (len == 0)
+		{
+			Disconnect(L"Recv 0");
+			return;
+		}
+
+		if (_recvBuffer.OnWrite(len) == false)
+		{
+			Disconnect(L"OnWirte Overflow");
+		}
+
+		int32 dataSize = _recvBuffer.DataSize();
+		int32 processLen = OnRecv(_recvBuffer.ReadPos(), dataSize); // 컨텐츠 코드에서 재정의
+		if (processLen < 0 || dataSize < processLen || _recvBuffer.OnRead(processLen) == false)
+		{
+			Disconnect(L"OnRead Overflow");
+			return;
+		}
+
+		// 커서 정리
+		_recvBuffer.Clean();
+
+		// 수신 등록
+		BoostRegisterRecv();
+		});
+}
+
+void Session::BoostRegisterSend()
+{
+	if (IsConnected() == false)
+		return;
+
+	// 보낼 데이터를 sendEvent에 등록
+	{
+		WRITE_LOCK;
+
+		int32 writeSize = 0;
+		while (_sendQueue.empty() == false)
+		{
+			SendBufferRef sendBuffer = _sendQueue.front();
+
+			writeSize += sendBuffer->WriteSize();
+			// TODO : 예외 체크
+
+			_sendQueue.pop();
+			_sendEvent.sendBuffers.push_back(sendBuffer);
+		}
+	}
+
+	// Scatter-Gather (흩어져 있는 데이터를 모아서 한 방에 보낸다)
+	vector<boost::asio::const_buffer> buffers;
+	buffers.reserve(_sendEvent.sendBuffers.size());
+	for (SendBufferRef sendBuffer : _sendEvent.sendBuffers)
+	{
+		buffers.push_back(boost::asio::buffer(sendBuffer->Buffer(), sendBuffer->WriteSize()));
+	}
+
+	boost::asio::async_write(_boostSocket, buffers, [this](boost::system::error_code ec, size_t len) {
+		_sendEvent.owner = nullptr; // RELEASE_REF
+		_sendEvent.sendBuffers.clear(); // RELESE_REF
+
+		if (len == 0)
+		{
+			Disconnect(L"Send 0");
+			return;
+		}
+
+		// 컨텐츠 코드에서 재정의
+		OnSend(len);
+
+		bool registerSend = false;
+
+		{
+			WRITE_LOCK;
+			if (_sendQueue.empty())
+				_sendResitered.store(false);
+			else
+				registerSend = true;
+		}
+
+		if (registerSend)
+			BoostRegisterSend();
+		});
+}
+
+void Session::BoostRegisterDisconnect()
+{
+	boost::system::error_code ec;
+
+	_boostSocket.value().shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
+	if (ec) cerr << "shutdown 실패 : " << ec.message() << endl;
+
+	_boostSocket.value().close(ec);
+	if (ec) cerr << "close 실패 : " << ec.message() << endl;
+}
+
 void Session::HandleError(int32 errorCode)
 {
 	switch (errorCode)
@@ -310,12 +437,23 @@ void Session::HandleError(int32 errorCode)
 	}
 }
 
+void Session::InitBoostSocket(boost::asio::io_context& io)
+{
+	_boostSocket.emplace(io);
+}
+
+boost::asio::ip::tcp::socket& Session::GetBoostSocket()
+{
+	assert(_boostSocket.has_value()); // 생성되었는지 확인
+	return _boostSocket.value();
+}
+
 
 /*-----------------
 	PacketSession
 ------------------*/
 
-PacketSession::PacketSession()
+PacketSession::PacketSession(ServerLibMode mode) : Session(mode)
 {
 }
 

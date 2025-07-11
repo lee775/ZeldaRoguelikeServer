@@ -13,6 +13,7 @@ class Service;
 class Session : public IocpObject
 {
 	friend class Listener;
+	friend class BoostListener;
 	friend class IocpCore;
 	friend class Service;
 
@@ -22,7 +23,7 @@ class Session : public IocpObject
 	};
 
 public:
-	Session();
+	Session(ServerLibMode mode);
 	virtual ~Session();
 
 public:
@@ -59,6 +60,12 @@ private:
 	void				ProcessRecv(int32 numOfBytes);
 	void				ProcessSend(int32 numOfBytes);
 
+	// Boost ÇÔ¼öµé
+	void				BoostProcessConnect();
+	void				BoostRegisterRecv();
+	void				BoostRegisterSend();
+	void				BoostRegisterDisconnect();
+
 	void				HandleError(int32 errorCode);
 
 protected:
@@ -73,12 +80,17 @@ public:
 	// Circular Buffer [             ]
 	//char _sendBuffer[1000];
 	//int32 _sendLen = 0;
+	void InitBoostSocket(boost::asio::io_context& io);
+	boost::asio::ip::tcp::socket& GetBoostSocket();
+
 
 private:
 	weak_ptr<Service>	_service;
 	SOCKET				_socket = INVALID_SOCKET;
+	optional<boost::asio::ip::tcp::socket> _boostSocket;
 	NetAddress			_netAddress = {};
 	Atomic<bool>		_connected = false;
+	ServerLibMode		_serverMode;
 
 private:
 	USE_LOCK;
@@ -112,7 +124,7 @@ struct PacketHeader
 class PacketSession : public Session
 {
 public:
-	PacketSession();
+	PacketSession(ServerLibMode mode);
 	virtual ~PacketSession();
 
 	PacketSessionRef	GetPacketSessionRef() { return static_pointer_cast<PacketSession>(shared_from_this()); }

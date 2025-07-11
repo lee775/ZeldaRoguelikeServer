@@ -103,3 +103,40 @@ void ServerService::CloseService()
 
 	Service::CloseService();
 }
+
+BoostService::BoostService(NetAddress address, IocpCoreRef core, SessionFactory factory, int32 maxSessionCount)
+	: Service(ServiceType::Server, address, core, factory, maxSessionCount)
+{
+}
+
+bool BoostService::Start()
+{
+	if (CanStart() == false)
+		return false;
+
+	_listener = make_shared<BoostListener>();
+	if (_listener == nullptr)
+		return false;
+
+	BoostServiceRef service = static_pointer_cast<BoostService>(shared_from_this());
+	if (_listener->StartAccept(service) == false)
+		return false;
+
+	io.run();
+
+	return true;
+}
+
+void BoostService::CloseService()
+{
+}
+
+SessionRef BoostService::CreateSession()
+{
+	SessionRef session = _sessionFactory();
+	session->SetService(shared_from_this());
+
+	session->InitBoostSocket(io);
+
+	return session;
+}
