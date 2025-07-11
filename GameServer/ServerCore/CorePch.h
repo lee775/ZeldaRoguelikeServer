@@ -1,12 +1,11 @@
 #pragma once
 
 
+
 #include "Types.h"
 #include "CoreMacro.h"
 #include "CoreTLS.h"
 #include "CoreGlobal.h"
-
-#include <boost/asio.hpp>
 
 #include <vector>
 #include <list>
@@ -25,6 +24,8 @@
 
 #include <optional>
 using namespace std;
+#include <boost/asio.hpp>
+
 
 #include <assert.h>
 #include "SocketUtils.h"

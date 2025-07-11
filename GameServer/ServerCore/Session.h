@@ -83,11 +83,10 @@ public:
 	void InitBoostSocket(boost::asio::io_context& io);
 	boost::asio::ip::tcp::socket& GetBoostSocket();
 
-
 private:
 	weak_ptr<Service>	_service;
 	SOCKET				_socket = INVALID_SOCKET;
-	optional<boost::asio::ip::tcp::socket> _boostSocket;
+	std::optional<boost::asio::ip::tcp::socket> _boostSocket;
 	NetAddress			_netAddress = {};
 	Atomic<bool>		_connected = false;
 	ServerLibMode		_serverMode;

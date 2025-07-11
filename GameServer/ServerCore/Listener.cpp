@@ -122,6 +122,11 @@ BoostListener::~BoostListener()
 {
 }
 
+HANDLE BoostListener::GetHandle()
+{
+	return nullptr; // ¶Ç´Â assert(false);
+}
+
 bool BoostListener::StartAccept(BoostServiceRef service)
 {
 	_service = service;

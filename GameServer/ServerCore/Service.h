@@ -85,10 +85,11 @@ private:
 class BoostService : public Service
 {
 public:
-	BoostService(NetAddress targetAddress, IocpCoreRef core, SessionFactory factory, int32 maxSessionCount = 1);
+	BoostService(NetAddress targetAddress, SessionFactory factory, int32 maxSessionCount = 1);
 	virtual ~BoostService() {}
 
-	virtual bool	Start() override;
+	bool BoostInit();
+	bool Start() override;
 	virtual void	CloseService() override;
 	SessionRef		CreateSession();
 

@@ -383,7 +383,7 @@ void Session::BoostRegisterSend()
 		buffers.push_back(boost::asio::buffer(sendBuffer->Buffer(), sendBuffer->WriteSize()));
 	}
 
-	boost::asio::async_write(_boostSocket, buffers, [this](boost::system::error_code ec, size_t len) {
+	boost::asio::async_write(_boostSocket.value(), buffers, [this](boost::system::error_code ec, size_t len) {
 		_sendEvent.owner = nullptr; // RELEASE_REF
 		_sendEvent.sendBuffers.clear(); // RELESE_REF
 

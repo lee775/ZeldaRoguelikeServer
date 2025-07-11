@@ -104,12 +104,12 @@ void ServerService::CloseService()
 	Service::CloseService();
 }
 
-BoostService::BoostService(NetAddress address, IocpCoreRef core, SessionFactory factory, int32 maxSessionCount)
-	: Service(ServiceType::Server, address, core, factory, maxSessionCount)
+BoostService::BoostService(NetAddress address, SessionFactory factory, int32 maxSessionCount)
+	: Service(ServiceType::Server, address, nullptr, factory, maxSessionCount)
 {
 }
 
-bool BoostService::Start()
+bool BoostService::BoostInit()
 {
 	if (CanStart() == false)
 		return false;
@@ -121,7 +121,10 @@ bool BoostService::Start()
 	BoostServiceRef service = static_pointer_cast<BoostService>(shared_from_this());
 	if (_listener->StartAccept(service) == false)
 		return false;
+}
 
+bool BoostService::Start()
+{
 	io.run();
 
 	return true;
