@@ -28,6 +28,7 @@ using ServerServiceRef = std::shared_ptr<class ServerService>;
 using BoostListenerRef = std::shared_ptr<class BoostListener>;
 using BoostServiceRef = std::shared_ptr<class BoostService>;
 using ClientServiceRef = std::shared_ptr<class ClientService>;
+using BoostClientServiceRef = std::shared_ptr<class BoostClientService>;
 using SendBufferRef = std::shared_ptr<class SendBuffer>;
 
 #define size16(val)		static_cast<int16>(sizeof(val))

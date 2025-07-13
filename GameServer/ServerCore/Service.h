@@ -28,7 +28,7 @@ public:
 	virtual void		CloseService();
 	void				SetSessionFactory(SessionFactory func) { _sessionFactory = func; }
 
-	SessionRef			CreateSession();
+	virtual SessionRef	CreateSession();
 	void				AddSession(SessionRef session);
 	void				ReleaseSession(SessionRef session);
 	int32				GetCurrentSessionCount() { return _sessionCount; }
@@ -64,6 +64,17 @@ public:
 	virtual bool	Start() override;
 };
 
+class BoostClientService : public Service
+{
+public:
+	BoostClientService(NetAddress targetAddress, SessionFactory factory, int32 maxSessionCount = 1);
+	virtual ~BoostClientService() {}
+	SessionRef		CreateSession() override;
+
+	bool BoostInit();
+	virtual bool	Start() override;
+	boost::asio::io_context		io;
+};
 
 /*-----------------
 	ServerService
@@ -91,7 +102,7 @@ public:
 	bool BoostInit();
 	bool Start() override;
 	virtual void	CloseService() override;
-	SessionRef		CreateSession();
+	SessionRef		CreateSession() override;
 
 	boost::asio::io_context& GetIoContext() { return io; }
 

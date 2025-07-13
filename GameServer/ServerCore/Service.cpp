@@ -143,3 +143,41 @@ SessionRef BoostService::CreateSession()
 
 	return session;
 }
+
+BoostClientService::BoostClientService(NetAddress targetAddress, SessionFactory factory, int32 maxSessionCount)
+	: Service(ServiceType::Client, targetAddress, nullptr, factory, maxSessionCount)
+{
+}
+
+SessionRef BoostClientService::CreateSession()
+{
+	SessionRef session = _sessionFactory();
+	session->SetService(shared_from_this());
+
+	session->InitBoostSocket(io);
+
+	return session;
+}
+
+bool BoostClientService::BoostInit()
+{
+	if (CanStart() == false)
+		return false;
+
+	const int32 sessionCount = GetMaxSessionCount();
+	for (int32 i = 0; i < sessionCount; i++)
+	{
+		SessionRef session = CreateSession();
+		if (session->Connect() == false)
+			return false;
+	}
+
+	return true;
+}
+
+bool BoostClientService::Start()
+{
+	io.run();
+
+	return true;
+}

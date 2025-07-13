@@ -66,6 +66,9 @@ private:
 	void				BoostRegisterSend();
 	void				BoostRegisterDisconnect();
 
+	// Cliend¸¸ »ç¿ë
+	bool				BoostRegisterConnect();
+
 	void				HandleError(int32 errorCode);
 
 protected:

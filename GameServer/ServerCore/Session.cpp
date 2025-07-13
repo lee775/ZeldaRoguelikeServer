@@ -48,7 +48,10 @@ void Session::Send(SendBufferRef sendBuffer)
 
 bool Session::Connect()
 {
-	return RegisterConnect();
+	if (_serverMode == ServerLibMode::iocp)
+		return RegisterConnect();
+	else if (_serverMode == ServerLibMode::boost)
+		return BoostRegisterConnect();
 }
 
 void Session::Disconnect(const WCHAR* cause)
@@ -324,7 +327,6 @@ void Session::BoostRegisterRecv()
 	if (IsConnected() == false)
 		return;
 
-
 	_boostSocket.value().async_read_some(boost::asio::buffer(_recvBuffer.WritePos(), _recvBuffer.FreeSize()), [this](boost::system::error_code ec, std::size_t len) {
 		if (len == 0)
 		{
@@ -420,6 +422,28 @@ void Session::BoostRegisterDisconnect()
 
 	_boostSocket.value().close(ec);
 	if (ec) cerr << "close ½ÇÆÐ : " << ec.message() << endl;
+}
+
+bool Session::BoostRegisterConnect()
+{
+	if (IsConnected())
+		return false;
+
+	if (GetService()->GetServiceType() != ServiceType::Client)
+		return false;
+
+	//_boostSocket.value().set_option(boost::asio::socket_base::reuse_address(true));
+
+	wstring ip = GetService()->GetNetAddress().GetIpAddress();
+
+	boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::make_address(string(ip.begin(), ip.end())), GetService()->GetNetAddress().GetPort());
+
+	_boostSocket.value().async_connect(endpoint, [this](boost::system::error_code ec)
+		{
+			BoostProcessConnect();
+		});
+
+	return true;
 }
 
 void Session::HandleError(int32 errorCode)

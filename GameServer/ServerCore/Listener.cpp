@@ -165,7 +165,7 @@ void BoostListener::RegisterAccept()
 
 			if (!ec)
 			{
-				std::cout << "[서버] 클라이언트 연결됨\n";
+				std::cout << "[Boost Server] 클라이언트 연결됨\n";
 
 				boost::asio::ip::tcp::endpoint remoteEndpoint = session->GetBoostSocket().remote_endpoint();
 				string ip = remoteEndpoint.address().to_string();
@@ -178,7 +178,7 @@ void BoostListener::RegisterAccept()
 			}
 			else
 			{
-				std::cerr << "[서버] 연결 실패: " << ec.message() << "\n";
+				std::cerr << "[Boost Server] 연결 실패: " << ec.message() << "\n";
 			}
 
 			this->RegisterAccept(); // 다음 클라이언트 수락
